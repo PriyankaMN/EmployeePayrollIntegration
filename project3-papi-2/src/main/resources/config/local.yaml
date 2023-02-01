@@ -1,8 +1,8 @@
 file:
-  ReadPath: C:\Users\primahar\OneDrive - Capgemini\Desktop\SFTP\Outbound\payment_Processing.csv
-  WritePath: C:\Users\primahar\OneDrive - Capgemini\Desktop\SFTP\Inbound\sftpData.csv
-  ArchivePath : C:\Users\primahar\OneDrive - Capgemini\Desktop\SFTP\Archive
-  outbound: C:\Users\primahar\OneDrive - Capgemini\Desktop\SFTP\Outbound
+  ReadPath: C:\Users\Desktop\SFTP\Outbound\payment_Processing.csv
+  WritePath: C:\Users\Desktop\SFTP\Inbound\sftpData.csv
+  ArchivePath : C:\Users\Desktop\SFTP\Archive
+  outbound: C:\Users\Desktop\SFTP\Outbound
   matcher : '*.csv'
 
 db:
@@ -13,15 +13,15 @@ db:
   database: Mulesoft
 
 salesforce:
-  username: priyamn@mycompany.com
-  password: Priya1998!
-  token: FBKnPmviP2eKJcyWoQBjTFnq
+  username: username@yourcompany.com
+  password: Password
+  token: tokenkey
 
 email:
   host: smtp.gmail.com
   port: "587"
-  user: iampriyamn@gmail.com
-  password: vzwkmavcqhbhyalt
+  user: username@gmail.com
+  password: password
   
 SalesForceError : "SalesForceError"
 FileError : "FileError"
