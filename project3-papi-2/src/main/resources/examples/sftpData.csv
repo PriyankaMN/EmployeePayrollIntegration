@@ -1,0 +1,8 @@
+﻿Emp_Id,First_Name,Last_Name,Date_of_Birth,Joining_Date,Termination_Date,Employee_Status,Payment_Status,Phone_Number,Address,Status
+1111,Daniel,White,1965-11-10,2023-01-01,,Terminated,Payment Pending,9898787866,Flat No 001 Fake Street Pune,
+1112,Austin,James,1967-08-15,2023-01-02,,Terminated,Payment Pending,9898787896,Flat No 002 Fake Street Pune,
+1113,Peter,Carolina,1969-05-19,2023-01-03,,Employeed,Payment Pending,9898787926,Flat No 001 Fake Street Pune,
+1114,Glenn,Bison,1971-02-21,2023-01-04,,Employeed,Payment Pending,9898787956,Flat No 002 Fake Street Pune,
+1115,Mark,Henry,1972-11-25,2001-02-26,,Employeed,Payment Pending,9898787986,Flat No 001 Fake Street Pune,
+1116,Sadio,Mane,1998-10-02,2001-02-27,,Employeed,Payment Pending,9898787987,Flat No 001 Fake Street Pune,
+1117,Ronaldinho,Gacha,1962-11-25,2001-02-28,,Employeed,Payment Pending,9898787988,Flat No 001 Fake Street Pune,

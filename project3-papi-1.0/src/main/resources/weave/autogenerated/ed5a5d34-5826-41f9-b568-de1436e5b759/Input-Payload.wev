@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_ed5a5d34_5826_41f9_b568_de1436e5b759_Input_Payload = Array<{|  Emp_Id?: Number,   First_Name?: String,   Last_Name?: String,   Date_of_Birth?: Date,   Joining_Date?: Date,   Termination_Date?: Date,   Employee_Status?: String,   Payment_Status?: String,   Phone_Number?: String,   Address?: String,   Status?: String|}>
+

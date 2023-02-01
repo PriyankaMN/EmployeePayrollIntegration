@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tracking="http://www.mulesoft.org/schema/mule/ee/tracking" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/tracking http://www.mulesoft.org/schema/mule/ee/tracking/current/mule-tracking-ee.xsd">
+	<flow name="mainFlow1" doc:id="81c7d2e8-95c3-4719-9301-537af51c000e" >
+		<file:listener doc:name="On New or Updated File" doc:id="188a104e-78ac-4392-b090-23fc56abb969" config-ref="File_Config" directory="${file.outbound}">
+			<scheduling-strategy >
+				<fixed-frequency frequency="24" timeUnit="HOURS" />
+			</scheduling-strategy>
+		</file:listener>
+		<set-variable value="#[correlationId]" doc:name="CorelationId" doc:id="6b59f8de-fabe-4a74-80ac-175dfc8be598" variableName="CorelationId" />
+		<logger level="INFO" doc:name="Strat Logger" doc:id="32f42872-e8df-4afb-b2f6-ba506a9d2b6a" message='#["Strat Logger " ++ vars.CorelationId]' />
+		<flow-ref doc:name="DataBase Flow Reference" doc:id="bf9714d8-d039-43d1-bc25-d39c3742298e" name="DataBase" />
+		<flow-ref doc:name="SFTP Flow Reference" doc:id="4e3eaec0-3b7e-4533-98a2-8084f85e87b0" name="SFTP" />
+		<flow-ref doc:name="SalesForce Flow Reference" doc:id="1f71b6f5-99b8-424e-9271-1ec26d03f558" name="SalesForce" />
+		<flow-ref doc:name="Move Flow Reference" doc:id="af553283-8f60-4694-b0a4-595e21301d1c" name="Move_Sub_Flow" />
+		<set-variable value='#["End"]' doc:name="End" doc:id="6cca217c-3f36-4755-99d3-3f008542aadd" variableName="End" />
+		<logger level="INFO" doc:name="Logger" doc:id="8c491bee-23b4-4c49-b59e-a756f7a144ba" message='#[%dw 2.0&#10;output application/json&#10;---&#10;{&#10;	"errorType": error.errorType.identifier,&#10;	 "errorMessage": error.description&#10;	 }]' />
+		<logger level="INFO" doc:name="End Logger" doc:id="e951ef8d-5bc5-4d34-bb6b-1feee0130f67" message='#["End Logger " ++ vars.CorelationId]' />
+		<error-handler ref="globalErrorHandlerError_Handler" />
+	</flow>
+</mule>

@@ -1,0 +1,16 @@
+{
+  "sampleData": {
+    "34c5be55-f2c8-419b-8b91-32671f34f355": {
+      "payload": "sample_data/defaultbinarytype.dwl"
+    },
+    "98285b75-3660-4646-9dec-e4e309c99c58": {
+      "payload": "sample_data/list_java.dwl"
+    },
+    "cd6856b9-6a79-4703-82ca-280642d62997": {
+      "payload": "sample_data/list_employee__c.dwl"
+    },
+    "74f723ba-b71c-4e91-a032-89fcd6b1e687": {
+      "payload": "sample_data/list_java_1.dwl"
+    }
+  }
+}

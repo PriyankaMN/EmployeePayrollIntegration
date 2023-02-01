@@ -1,0 +1,19 @@
+%dw 2.0
+
+type auto_81c7d2e8_95c3_4719_9301_537af51c000e_Output_Payload = {|
+  "0": org_mule_runtime_api_message_Message, 
+  "1": org_mule_runtime_api_message_Message_8
+|}
+type org_mule_runtime_api_message_Message_8 = {|
+  payload: Array<{|    Id: String | Null,     success: Boolean {"typeId": "boolean"} | Null,     "error Message": String,     "error StatusCode": String  |}>, 
+  attributes: Null
+|} {"typeId": "org.mule.runtime.api.message.Message"}
+
+
+type org_mule_runtime_api_message_Message = {|
+  payload: Array<{|    Id: String | Null,     success: Boolean {"typeId": "boolean"} | Null  |}>, 
+  attributes: Null
+|} {"typeId": "org.mule.runtime.api.message.Message"}
+
+
+

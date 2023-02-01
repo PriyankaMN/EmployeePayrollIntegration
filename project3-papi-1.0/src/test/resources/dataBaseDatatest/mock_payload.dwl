@@ -1,0 +1,93 @@
+[
+  {
+    "Joining_Date": |2023-01-04T00:00:00|,
+    "Address": "Flat No 001 Fake Street Pune",
+    "Termination_Date": null,
+    "Date_of_Birth": |1965-11-10T00:00:00|,
+    "Payment_Status": "Payment Pending",
+    "Last_Name": "White",
+    "Phone_Number": "9898787866",
+    "Employee_Status": "TERMINATED",
+    "First_Name": "Daniel",
+    "Emp_Id": 1111,
+    "Status": ""
+  },
+  {
+    "Joining_Date": |2022-01-20T00:00:00|,
+    "Address": "Flat No 002 Fake Street Pune",
+    "Termination_Date": null,
+    "Date_of_Birth": |1967-08-15T00:00:00|,
+    "Payment_Status": "2023-01-18T11:49:01.206+05:30_Payment Processed",
+    "Last_Name": "James",
+    "Phone_Number": "9898787867",
+    "Employee_Status": "Employeed",
+    "First_Name": "Austin",
+    "Emp_Id": 1112,
+    "Status": ""
+  },
+  {
+    "Joining_Date": |2001-01-29T00:00:00|,
+    "Address": "Flat No 003 Fake Street Pune",
+    "Termination_Date": null,
+    "Date_of_Birth": |1969-05-19T00:00:00|,
+    "Payment_Status": "2023-01-18T11:49:01.206+05:30_Payment Processed",
+    "Last_Name": "Carolina",
+    "Phone_Number": "9898787868",
+    "Employee_Status": "Employeed",
+    "First_Name": "Peter",
+    "Emp_Id": 1113,
+    "Status": ""
+  },
+  {
+    "Joining_Date": |2001-02-12T00:00:00|,
+    "Address": "Flat No 004 Fake Street Pune",
+    "Termination_Date": null,
+    "Date_of_Birth": |1971-02-21T00:00:00|,
+    "Payment_Status": "2023-01-18T11:49:01.206+05:30_Payment Processed",
+    "Last_Name": "Bison",
+    "Phone_Number": "9898787861",
+    "Employee_Status": "Employeed",
+    "First_Name": "Glenn",
+    "Emp_Id": 1114,
+    "Status": ""
+  },
+  {
+    "Joining_Date": |2001-02-26T00:00:00|,
+    "Address": "Flat No 005 Fake Street Pune",
+    "Termination_Date": null,
+    "Date_of_Birth": |1972-11-25T00:00:00|,
+    "Payment_Status": "2023-01-18T11:49:01.222+05:30_Payment Processed",
+    "Last_Name": "Henry",
+    "Phone_Number": "9898787869",
+    "Employee_Status": "Employeed",
+    "First_Name": "Mark",
+    "Emp_Id": 1115,
+    "Status": ""
+  },
+  {
+    "Joining_Date": |2001-02-27T00:00:00|,
+    "Address": "Flat No 006 Fake Street Pune",
+    "Termination_Date": null,
+    "Date_of_Birth": |1998-10-02T00:00:00|,
+    "Payment_Status": "2023-01-18T11:49:01.223+05:30_Payment Processed",
+    "Last_Name": "Mane",
+    "Phone_Number": "9898787863",
+    "Employee_Status": "Employeed",
+    "First_Name": "Sadio",
+    "Emp_Id": 1116,
+    "Status": ""
+  },
+  {
+    "Joining_Date": |2001-02-28T00:00:00|,
+    "Address": "Flat No 007 Fake Street Pune",
+    "Termination_Date": null,
+    "Date_of_Birth": |1962-11-25T00:00:00|,
+    "Payment_Status": "2023-01-18T11:49:01.223+05:30_Payment Processed",
+    "Last_Name": "Gacha",
+    "Phone_Number": "9898787862",
+    "Employee_Status": "Employeed",
+    "First_Name": "Ronaldinho",
+    "Emp_Id": 1117,
+    "Status": ""
+  }
+]

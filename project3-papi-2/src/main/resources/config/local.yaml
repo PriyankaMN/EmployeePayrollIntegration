@@ -1,0 +1,28 @@
+file:
+  ReadPath: C:\Users\primahar\OneDrive - Capgemini\Desktop\SFTP\Outbound\payment_Processing.csv
+  WritePath: C:\Users\primahar\OneDrive - Capgemini\Desktop\SFTP\Inbound\sftpData.csv
+  ArchivePath : C:\Users\primahar\OneDrive - Capgemini\Desktop\SFTP\Archive
+  outbound: C:\Users\primahar\OneDrive - Capgemini\Desktop\SFTP\Outbound
+  matcher : '*.csv'
+
+db:
+  host: localhost
+  port: "3306"
+  user: root
+  password: root
+  database: Mulesoft
+
+salesforce:
+  username: priyamn@mycompany.com
+  password: Priya1998!
+  token: FBKnPmviP2eKJcyWoQBjTFnq
+
+email:
+  host: smtp.gmail.com
+  port: "587"
+  user: iampriyamn@gmail.com
+  password: vzwkmavcqhbhyalt
+  
+SalesForceError : "SalesForceError"
+FileError : "FileError"
+DataBaseError : "DataBaseError"

@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="error-suite.xml" />
+	<munit:test name="DB:CONNECTIVITY" doc:id="7ca5b489-4347-4ac5-9aad-cedbef4c7f81" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="07d86518-90df-45b8-8bb1-fafc05a25818" processor="db:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="261284d4-1356-41d2-9fcc-d353d5c4d9b0" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="DB:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="75d114a5-a600-4861-abdb-ba67a3a41ce5" >
+				<munit:payload value="#[readUrl('classpath://DataBasetest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://DataBasetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://DataBasetest\set-event_variable_.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="ba819a46-11c4-45bf-8a1c-5e99d7895dca" >
+				<flow-ref doc:name="Flow-ref to DataBase" doc:id="a846a49f-5c16-4e49-adc3-b10896c2b67a" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="d5cd0d97-6f03-41b8-9227-61a4c04edd2b" >
+						<logger level="INFO" doc:name="Logger" doc:id="2e5dcd67-88b5-4810-9de7-7e4c1882ed59" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="c7af7cae-8e94-4c2b-a3df-48ded9995c50" is='#[MunitTools::equalTo("DataBaseError")]' expression="#[vars.error]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="DB:RETRY_EXHAUSTED" doc:id="79dacfef-e2af-4df6-b564-fdc6e47a747a" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="97fa6523-4c91-4ccc-aa58-9030cc18777d" processor="db:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="261284d4-1356-41d2-9fcc-d353d5c4d9b0" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="DB:RETRY_EXHAUSTED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="3c193d16-0c31-4977-a682-91e33dcf171d" >
+				<munit:payload value="#[readUrl('classpath://DataBasetest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://DataBasetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://DataBasetest\set-event_variable_.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="4c195570-5c98-4851-8775-02d5d4527031" >
+				<flow-ref doc:name="Flow-ref to DataBase" doc:id="f7dbe874-bf71-4a63-9aee-61e3efff8aac" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="a150cd62-5c2d-4255-a4b0-5b4185631190" >
+						<logger level="INFO" doc:name="Logger" doc:id="b8173ed7-991e-40bb-910d-1c8f008ce97d" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="ad45a202-e653-4e75-bbd2-3c571e060596" actual="#[vars.error]" expected='#["DataBaseError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="DB:QUERY_EXECUTION" doc:id="51c7f9c6-1ccd-4f35-9f4d-892beacef110" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="eca684e4-e141-487a-8ab8-16f2f4423b6e" processor="db:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="261284d4-1356-41d2-9fcc-d353d5c4d9b0" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="DB:QUERY_EXECUTION" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="d12b1dd6-d272-44bf-a7e4-271c1d5599a9" >
+				<munit:payload value="#[readUrl('classpath://DataBasetest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://DataBasetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://DataBasetest\set-event_variable_.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="527d5fe0-d626-460a-a45f-e1de7b0b5f99" >
+				<flow-ref doc:name="Copy_of_Flow-ref to DataBase" doc:id="c3705323-8601-4afc-951f-cb87901263ae" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="0d607dc5-5b80-4292-9d5c-24d206517d60" >
+						<logger level="INFO" doc:name="Logger" doc:id="74f9fd1e-833a-4786-b93d-a178710aa6b3" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="8e51cc9d-3070-4bd8-8242-8af8aa3c5327" actual="#[vars.error]" expected='#["DataBaseError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="DB:BAD_SQL_SYNTAX" doc:id="fc8199c2-93f8-4703-8fde-8a84bb2182a7" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="1e9a1d9a-f6ea-4628-8825-0774e35ec827" processor="db:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="261284d4-1356-41d2-9fcc-d353d5c4d9b0" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="DB:BAD_SQL_SYNTAX" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="277d331a-b85f-4431-bfd4-3bda30f238aa" >
+				<munit:payload value="#[readUrl('classpath://DataBasetest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://DataBasetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://DataBasetest\set-event_variable_.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="08df371e-5393-4d42-b405-0e3eba403774" >
+				<flow-ref doc:name="Flow-ref to DataBase" doc:id="2531e21a-3255-4056-99fc-505c805b3923" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="a1082bca-4a87-41d4-b768-bdbc3bf657ac" >
+						<logger level="INFO" doc:name="Logger" doc:id="3c31d0d1-57b3-497b-aa89-8641cd389b55" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="908f8860-4529-4806-86a3-3eaa8c0a9ed6" actual="#[vars.error]" expected='#["DataBaseError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="FILE:ACCESS_DENIED" doc:id="b01fefa0-bf19-48a6-b0f2-cefeb66e5778" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="8a28fb64-b8b1-41a0-afb1-83dd66d20e60" processor="flow-ref" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="70ff0a64-b8e6-4a3c-8e5b-c00c7af05171" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="FILE:ACCESS_DENIED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="4a483643-2fd3-47a5-8a33-d44b1679761f" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SFTPtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SFTPtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SFTPtest\set-event_variable_.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="4c3d6c2f-e0a6-4318-a2bf-467529dad003" >
+				<flow-ref doc:name="Flow-ref" doc:id="a14acab7-d186-4e75-954c-2e4612aaed91" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="Error Continue" doc:id="34646646-d11a-4180-82af-c27f3b125635" >
+						<logger level="INFO" doc:name="Logger" doc:id="683ff14f-77e3-484c-ab15-f54dcab3680b" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="505a73e8-68b2-4fa6-90b1-09167c924da7" actual="#[vars.error]" expected='#["FileError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="FILE:CONNECTIVITY" doc:id="7c03f2e5-e30b-4c34-b732-07e3f69ed0aa" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="b2c956d2-3f79-4f1d-8af9-3f7f279ab503" processor="flow-ref" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="70ff0a64-b8e6-4a3c-8e5b-c00c7af05171" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="FILE:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="da6b3c7a-1105-4b3e-8aca-f972299383ee" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SFTPtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SFTPtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SFTPtest\set-event_variable_.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="0a0fab04-abbe-4575-9a3b-addfcd293abd" >
+				<flow-ref doc:name="Flow-ref" doc:id="11da88f2-f7fc-47ce-96e9-212e5aef23b5" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="Error Continue" doc:id="1bfad34a-51f5-4d5f-b10f-acff8c331262" >
+						<logger level="INFO" doc:name="Logger" doc:id="6a201603-730d-40c2-b15d-42e586899306" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="2517e7c1-d3e9-44f1-a59e-bd6a140107d7" actual="#[vars.error]" expected='#["FileError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="FILE:FILE_ALREADY_EXISTS" doc:id="a319c521-cd7b-4ccd-a14e-5fccf46a92a7" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="13f88957-df90-4a1f-90de-78e33e7a940f" processor="flow-ref" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="70ff0a64-b8e6-4a3c-8e5b-c00c7af05171" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="FILE:FILE_ALREADY_EXISTS" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Copy_of_Set Input" doc:id="7da9d502-7c6c-48de-939c-094b2444a3e1" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SFTPtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SFTPtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SFTPtest\set-event_variable_.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="9e86f820-994d-4d4f-8411-534167202163" >
+				<flow-ref doc:name="Flow-ref" doc:id="755d8494-a1ed-42fd-bfc1-e1293840c641" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="Error Continue" doc:id="2b4f13a6-28b2-4f03-8bbb-dc9f4c2ba82d" >
+						<logger level="INFO" doc:name="Logger" doc:id="0ac98091-f7ca-4780-8ddc-9b716726c9a2" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="d6ce2c4a-ec97-42f0-8060-6e6a91ffaca6" actual="#[vars.error]" expected='#["FileError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="FILE:FILE_LOCK" doc:id="d1a52cad-aa53-4224-923c-2cb56dc0c284" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="5e2fbeb5-3108-4752-b9b8-a8a084a38c97" processor="flow-ref" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="70ff0a64-b8e6-4a3c-8e5b-c00c7af05171" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="FILE:FILE_LOCK" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="2a56810c-3e6d-4b64-8e80-f7ac195a20a2" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SFTPtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SFTPtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SFTPtest\set-event_variable_.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="39581fae-b0f7-4e93-92e6-05598dc8d67c" >
+				<flow-ref doc:name="Flow-ref" doc:id="6af0ac85-d354-41e3-9e7d-85698f77116a" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="Error Continue" doc:id="9851638f-11a0-4e28-b50c-3de739554b33" >
+						<logger level="INFO" doc:name="Logger" doc:id="7a22ad63-736c-4645-b614-3ed2a0ed3f01" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="cf6f7765-36f6-486a-8ba4-3b08befdcd94" actual="#[vars.error]" expected='#["FileError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="FILE:ILLEGAL_CONTENT" doc:id="9d80d9c7-fad4-4135-9edd-dfbf42fc608e" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="c7d5d867-4d49-4a48-a518-6f62e489d2ea" processor="flow-ref" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="70ff0a64-b8e6-4a3c-8e5b-c00c7af05171" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="FILE:ILLEGAL_CONTENT" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="26da81b4-120a-4e7c-8be9-473a7f08ae39" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SFTPtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SFTPtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SFTPtest\set-event_variable_.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="f30af11c-3301-4704-baea-434ef209f478" >
+				<flow-ref doc:name="Copy_of_Flow-ref" doc:id="b6adbc83-f9ac-4eb1-82e6-b33044c1afb0" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="Error Continue" doc:id="c99d1e31-bc8f-47b3-84f8-bd50c763bfe8" >
+						<logger level="INFO" doc:name="Logger" doc:id="58418314-0fb9-42ef-8ac7-e168a2f0f7cc" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="fabad4ab-1a4d-4078-a20d-d9acf7f84deb" actual="#[vars.error]" expected='#["FileError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="FILE:ILLEGAL_PATH" doc:id="9de3848e-537f-4280-838a-b4bf8898f4c0" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="46519f6a-f9bc-4517-986a-fc96e1064ab8" processor="flow-ref" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="70ff0a64-b8e6-4a3c-8e5b-c00c7af05171" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="FILE:ILLEGAL_PATH" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="aa9c1b9d-dddf-4bcf-800e-8cc51ede4045" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SFTPtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SFTPtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SFTPtest\set-event_variable_.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="c1b2c96d-8450-4906-b4c6-b760d2123566" >
+				<flow-ref doc:name="Copy_of_Flow-ref" doc:id="7ba09481-d25a-4484-8886-4590cc002a6d" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="Error Continue" doc:id="03cfb151-9e17-4e13-9ba0-95612795e086" >
+						<logger level="INFO" doc:name="Logger" doc:id="4505fe14-3cc7-4227-a3b7-9c1d8d7c4b71" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="db902e3e-b26e-4b08-b196-4fb77963232b" actual="#[vars.error]" expected='#["FileError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SALESFORCE:INVALID_INPUT" doc:id="8f3c0359-b103-4538-94ec-b89a41905d6b" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="e2c5f320-ab4f-4432-8b1e-cb2de149e3e2" processor="salesforce:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cf0aa757-5a44-4ae7-951d-17a8d0be67fd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SALESFORCE:INVALID_INPUT" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="fef574d6-5764-49de-b1b4-e266f5a629b5" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SalesForcetest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SalesForcetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForcetest\set-event_variable_.dwl')]" encoding="UTF-8" />
+					<munit:variable key="updateData" value="#[output application/java --- readUrl('classpath://SalesForcetest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="a68ff8e2-ed13-4076-a429-9940ddcb1468" >
+				<flow-ref doc:name="Flow-ref" doc:id="de1b02e9-6ec3-4783-8252-8d6d20beff12" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="Error Continue" doc:id="fd4014a7-7765-4c1a-bb28-5cf87fcb9287" >
+						<logger level="INFO" doc:name="Copy_of_Logger" doc:id="f200f74e-140a-4fbe-91c7-298be2a2b328" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="1ace29be-ef0f-4299-b6cf-831db92a7ffb" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SALESFORCE:TIMEOUT" doc:id="a470fe8d-7068-4a31-935c-0c50f89c96b7" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="7149a9fe-6e2a-4404-8ad2-559d21e71ba9" processor="salesforce:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cf0aa757-5a44-4ae7-951d-17a8d0be67fd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SALESFORCE:TIMEOUT" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="ebdb55da-a891-4e9f-83e2-c5d14878113a" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SalesForcetest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SalesForcetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForcetest\set-event_variable_.dwl')]" encoding="UTF-8" />
+					<munit:variable key="updateData" value="#[output application/java --- readUrl('classpath://SalesForcetest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="840a444d-060e-4f15-8ee7-f0ddf786f51d" >
+				<flow-ref doc:name="Flow-ref" doc:id="f9883a88-0476-4884-b1e5-64665187449a" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="Error Continue" doc:id="84179459-1e06-4d4c-97f6-240243cfd142" >
+						<logger level="INFO" doc:name="Logger" doc:id="58cd5c7b-7c76-4e7d-b28c-224b1421924a" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="a4c6b3c7-d276-4b84-838e-6caf5d4dbef8" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SALESFORCE:MUTUAL_AUTHENTICATION_FAILED" doc:id="1a2a5850-3f63-42c6-a26e-c41b648ac890" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="604bd375-d6de-4bf1-aaa7-91cfaf41b960" processor="salesforce:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cf0aa757-5a44-4ae7-951d-17a8d0be67fd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SALESFORCE:MUTUAL_AUTHENTICATION_FAILED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="160a0ce0-46b7-4bd2-b6e0-4257d5b94b5e" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SalesForcetest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SalesForcetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForcetest\set-event_variable_.dwl')]" encoding="UTF-8" />
+					<munit:variable key="updateData" value="#[output application/java --- readUrl('classpath://SalesForcetest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="112c44f6-7f2b-4760-ab32-fe7c76f60f0a" >
+				<flow-ref doc:name="Flow-ref" doc:id="6daf91d6-5843-4e74-93d7-8269ac06b599" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="Error Continue" doc:id="7c17dddb-e37e-4afa-87e2-f1fb717d73f6" >
+						<logger level="INFO" doc:name="Logger" doc:id="05a1531c-50ba-4e90-9516-76fc58b989a8" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="293c025e-d55f-4899-a09f-2f988b155f74" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SALESFORCE:LIMIT_EXCEEDED" doc:id="2ff1d241-17af-4bc3-83ec-ec555aaf0bb5" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="f803cbb2-af98-48a0-9ffb-fef3ecc20ff0" processor="salesforce:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cf0aa757-5a44-4ae7-951d-17a8d0be67fd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SALESFORCE:LIMIT_EXCEEDED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="5eb4b399-4a67-44a5-ba03-d7a8b262d0cb" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SalesForcetest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SalesForcetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForcetest\set-event_variable_.dwl')]" encoding="UTF-8" />
+					<munit:variable key="updateData" value="#[output application/java --- readUrl('classpath://SalesForcetest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="165942da-7d5f-415f-af27-0ec97bf675ad" >
+				<flow-ref doc:name="Flow-ref" doc:id="75fba461-2ca9-4d4a-9fe8-5897bf1c1d28" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="Error Continue" doc:id="a283d3d3-e8fd-44ce-a20b-c19f680dc2af" >
+						<logger level="INFO" doc:name="Logger" doc:id="f798c8f1-02a8-4f2f-898e-d4070751ab23" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="2dc14e26-bc7f-4313-acb5-5c0b3f7298d4" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SALESFORCE:NOT_FOUND" doc:id="aadeb383-5cbc-4c54-a319-e66582a94f19" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="9e00acef-0856-4d5c-a196-b65cd3085bfe" processor="salesforce:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cf0aa757-5a44-4ae7-951d-17a8d0be67fd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SALESFORCE:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="f029a913-4af1-4099-ba12-1b20bc771a5a" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SalesForcetest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SalesForcetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForcetest\set-event_variable_.dwl')]" encoding="UTF-8" />
+					<munit:variable key="updateData" value="#[output application/java --- readUrl('classpath://SalesForcetest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="99d2a424-ee29-454e-8da0-54b089f70b4a" >
+				<flow-ref doc:name="Flow-ref" doc:id="e7cfd5cb-438c-4c90-a08b-d1bd57a287a0" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="Copy_of_Error Continue" doc:id="13842bad-97f6-4b07-bbe3-0994921672d0" >
+						<logger level="INFO" doc:name="Logger" doc:id="456649d9-c416-4584-a435-8e02969e067d" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="20296d80-fe25-433c-8a34-614d8b875e23" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="STREAM_MAXIMUM_SIZE_EXCEEDED" doc:id="d3e8179e-6223-40a5-b9a1-e48c4f53546a" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="7dde6b3f-1164-4eb4-833b-5a660f007c1b" processor="salesforce:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cf0aa757-5a44-4ae7-951d-17a8d0be67fd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SALESFORCE:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="120fad5a-2b3f-45c4-a816-8b25cb65273c" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SalesForcetest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SalesForcetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForcetest\set-event_variable_.dwl')]" encoding="UTF-8" />
+					<munit:variable key="updateData" value="#[output application/java --- readUrl('classpath://SalesForcetest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="3fbfe3b1-2938-4e10-b8cc-39bc2a1c943a" >
+				<flow-ref doc:name="Flow-ref" doc:id="89738963-1edf-4ac6-b35c-aab1632798c3" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="Error Continue" doc:id="8da19f2f-ddb8-4798-bb0a-bcf2e02f2d6a" >
+						<logger level="INFO" doc:name="Copy_of_Logger" doc:id="23bbb73b-45f9-4d27-9ff6-0e8daec3b8fa" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="14f5fa71-be98-4930-b8d4-d86e3b021faa" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="EXPRESSION" doc:id="14f9d76e-ae84-4244-8c48-11b0965e23c1" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="778278f0-ca33-4467-b8c1-e9bb41093e11" processor="salesforce:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cf0aa757-5a44-4ae7-951d-17a8d0be67fd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="EXPRESSION" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="6d704089-683e-4485-9e52-69ef5508e57d" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SalesForcetest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SalesForcetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForcetest\set-event_variable_.dwl')]" encoding="UTF-8" />
+					<munit:variable key="updateData" value="#[output application/java --- readUrl('classpath://SalesForcetest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="3848f3d4-dcf1-45e9-a314-4ee297d57c40" >
+				<flow-ref doc:name="Flow-ref" doc:id="2ee5c1a1-942f-4d34-8a1e-f0b281ed291b" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="Error Continue" doc:id="249c6070-cc04-45f1-b8e6-6a95d3c00b0b" >
+						<logger level="INFO" doc:name="Logger" doc:id="e0667d86-ad91-430c-a20f-2048d03afba2" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="19d9add4-5132-4ad9-bda2-1fabc18def70" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SALESFORCE:RETRY_EXHAUSTED" doc:id="f022e7cd-eca8-4918-94b9-ed6c8592e03c" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="2836113b-7efa-4514-85f3-7b01b6ccaf91" processor="salesforce:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cf0aa757-5a44-4ae7-951d-17a8d0be67fd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SALESFORCE:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="deee1f53-1c88-482a-8a0b-337b1c14725d" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SalesForcetest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SalesForcetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForcetest\set-event_variable_.dwl')]" encoding="UTF-8" />
+					<munit:variable key="updateData" value="#[output application/java --- readUrl('classpath://SalesForcetest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="351c3c59-0904-49af-934a-afa92e9e72c8" >
+				<flow-ref doc:name="Copy_of_Flow-ref" doc:id="5703defa-bc1f-4de2-a791-dddca9e41200" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="Error Continue" doc:id="7591f639-062e-4447-9877-71690eaf0d54" >
+						<logger level="INFO" doc:name="Copy_of_Logger" doc:id="a52280fa-c0c9-49a8-8e9f-d4d1b41f0878" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="26a32a0e-7885-407c-9124-829c9c249668" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SALESFORCE:INVALID_RESPONSE" doc:id="7b7716e5-ede5-43c8-851f-a08b6d669e79" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="18fce639-baf3-4b40-9da5-aa6ffca09945" processor="salesforce:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cf0aa757-5a44-4ae7-951d-17a8d0be67fd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SALESFORCE:INVALID_RESPONSE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="b985ad25-c258-4869-801b-3aed164e8ac5" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SalesForcetest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SalesForcetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForcetest\set-event_variable_.dwl')]" encoding="UTF-8" />
+					<munit:variable key="updateData" value="#[output application/java --- readUrl('classpath://SalesForcetest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="55735d33-ecad-4897-bc21-86ec00de3c71" >
+				<flow-ref doc:name="Flow-ref" doc:id="267df9f5-3e80-48c0-bfda-b7c65d48b259" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="Error Continue" doc:id="44efaa65-117f-45a0-bbc3-5e1aa3c003e3" >
+						<logger level="INFO" doc:name="Copy_of_Logger" doc:id="e4f38c86-fcb5-4704-8092-d6d1bedfcb37" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="b92e638e-d098-4223-9242-fd68f25af162" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SALESFORCE:CONNECTIVITY" doc:id="e3622519-af32-43f0-897f-10ed75f6ef1a" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="5241bede-2ca3-4ac4-9038-ac12ffa88f88" processor="salesforce:update" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cf0aa757-5a44-4ae7-951d-17a8d0be67fd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SALESFORCE:CONNECTIVITY" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="40579bb7-43e0-4d17-9aa5-60e9a2d7fd8f" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SalesForcetest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SalesForcetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForcetest\set-event_variable_.dwl')]" encoding="UTF-8" />
+					<munit:variable key="updateData" value="#[output application/java --- readUrl('classpath://SalesForcetest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="ae21fae4-bcb6-4fa9-8978-dab1c4344843" >
+				<flow-ref doc:name="Flow-ref" doc:id="88c24632-69ce-419a-b69a-20b2792bda3b" name="mainFlow1" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="Error Continue" doc:id="d70bcff2-4dd8-40ad-ae52-faf751554bd1" >
+						<logger level="INFO" doc:name="Logger" doc:id="8004cfc6-f15a-4b86-adf6-a6696ea5278c" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="bf8753cd-5260-43a9-b43d-566132e9c921" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

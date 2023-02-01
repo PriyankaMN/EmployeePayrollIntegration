@@ -1,0 +1,828 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:email="http://www.mulesoft.org/schema/mule/email" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/email http://www.mulesoft.org/schema/mule/email/current/mule-email.xsd">
+<error-handler name="globalErrorHandlerError_Handler" doc:id="d27be31f-cb2e-4947-8ecf-eca7ab6e1bf2" >
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate SalesForce" doc:id="d38f6bb3-3347-4291-a95f-adac1795801a" type="SALESFORCE:CONNECTIVITY">
+			<ee:transform doc:name="Transform Message" doc:id="c4896362-04d8-41d2-a852-21a2e3822c4d">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="240d0caf-1479-4bb2-accd-f24432a3bada" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="373d2dd2-f452-4cff-89d6-d479a2ed2f6e">
+				<ee:message />
+				<ee:variables>
+					<ee:set-variable variableName="error"><![CDATA[p('SalesForceError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<set-variable value='#["SALESFORCE:CONNECTIVITY"]' doc:name="Set Variable" doc:id="4d2205bc-b36b-4061-ada3-54f7391b0278" variableName="errorr"/>
+			<email:send doc:name="MailSend" doc:id="27784b92-0e1a-4ac8-b1e1-6175b4db8d11" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		
+</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="86783eab-f0db-4904-96af-66151824c0ce" type="DB:RETRY_EXHAUSTED">
+			<ee:transform doc:name="Transform Message" doc:id="7762ee0b-9113-4f3a-a408-20767779085e" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="209eccab-035f-4dc8-9c4c-5046aa22b384" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="374d13bb-f503-46e3-9e91-8718b35232dc" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('DataBaseError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="6a13ed6a-a02f-407b-81aa-e48d5da1cad0" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e16b2298-8637-4fa2-98f0-05de61db5fc3" type="DB:QUERY_EXECUTION">
+			<ee:transform doc:name="Transform Message" doc:id="07dbc2cf-3da7-4708-9a71-21aac92fddeb" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="7a73c559-e556-4470-a5e0-2206d06fa6c0" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="3e03edf1-bbfa-487d-bdc5-85cb618e2841" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('DataBaseError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="518d16cb-d1a7-45ca-a97b-df7e9dddaced" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="3154a384-3c9c-4090-9899-0641614b9df1" type="DB:CONNECTIVITY">
+			<ee:transform doc:name="Transform Message" doc:id="b5a694eb-4334-42a2-a04b-dad03ecbc56a" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="c707b3fb-a292-408f-b5de-5ff0d7b76b31" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="36ec2be7-9c40-4554-ac83-dce5e22e88e3">
+				<ee:message />
+				<ee:variables>
+					<ee:set-variable variableName="error"><![CDATA[p('DataBaseError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="3ef00d90-f3bc-4f01-90c3-b7d1d8d839e8" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		
+</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="d250e6f2-c380-4385-9887-1343e87bb710" type="DB:BAD_SQL_SYNTAX">
+			<ee:transform doc:name="Transform Message" doc:id="3a881cf7-0ea2-42a2-9506-c91734546004" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="d2f296b1-cb2b-4060-95f6-dc50af92e3de" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="87d9ff63-7fe8-4391-a8d7-0c5b69c7864e" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('DataBaseError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="59194bdb-17c8-4b18-b268-886310a0603e" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="f90ebc2c-e7eb-434e-bc99-b31f95232fec" type="FILE:ACCESS_DENIED">
+			<ee:transform doc:name="Transform Message" doc:id="639d2c1b-0b59-498b-a26e-75909ce663c2" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="a6042e0e-a18d-4263-8e58-cd3d2499afd8" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="1dad3365-fee4-4317-99fd-281b61b34cb0" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('FileError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="214204c3-60ae-45a8-a698-2209107f6a10" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="78766178-2ee0-435f-91bd-da4899d81ba7" type="FILE:CONNECTIVITY">
+			<ee:transform doc:name="Transform Message" doc:id="e49e8f54-4b05-4f39-a062-a38527be18c5" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="7572f55b-a6c6-4c9b-b48a-9b102d4e6258" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="205d8d5d-9e29-4cf3-bffe-d547b476c947" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('FileError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="2abea1cb-0a54-4780-9766-6da68afa48e6" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="87ad7c73-121c-4e4b-8373-46d7addbaefc" type="FILE:FILE_ALREADY_EXISTS">
+			<ee:transform doc:name="Transform Message" doc:id="e2760a6f-ce6e-40da-b56b-49c9ddadc0fc" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="d922e3bd-287b-4411-83a9-682275c88226" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="46504be9-f8d1-43a7-b023-b89c819a972f" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('FileError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="a6f36b10-8f14-4117-9f16-05335067c0b4" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ceb9d3ba-18ce-4e2f-bcc5-b380acefc9ee" type="FILE:FILE_LOCK">
+			<ee:transform doc:name="Transform Message" doc:id="66af0e83-a176-4849-a19a-468c9eb9081a" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="33f7dbb6-2026-4903-8d67-c87f1ac4f9ec" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="f173bb9a-0a15-4684-9d7f-6bb71e3fd713" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('FileError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="e37e1df4-2d40-4900-b45a-af3d62430e80" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="67928c6d-7dd1-4d3d-b4a0-14c266d919c9" type="FILE:ILLEGAL_CONTENT">
+			<ee:transform doc:name="Transform Message" doc:id="8c768835-1d4a-44de-88e7-f74755632b59" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="17ec492e-a263-4497-9a62-58a93c6c1ed2" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="df647ad6-0997-4b61-a093-8549e09cb6f8" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('FileError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="d43b149a-d51d-471d-ae1d-8a4b6a25feb4" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="ec0a9b01-4404-4e03-9533-bac4906e3f64" type="FILE:ILLEGAL_PATH">
+			<ee:transform doc:name="Transform Message" doc:id="15247da4-16aa-466e-a37b-d7f1cb6357d9" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="cf686dbf-6c50-4f97-960d-8e596101ebb1" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="64e42550-c4f7-48ab-8870-6d2f856994b0" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('FileError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="6148d600-0303-4a59-99c3-ace5bc0c0ffe" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="65962225-3f15-4a59-914e-737433c9a758" type="FILE:RETRY_EXHAUSTED">
+			<ee:transform doc:name="Transform Message" doc:id="b5e53bb5-fdfa-4775-9ea3-5074515032ff" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="b5e47798-956c-47af-b309-756cc3037cb5" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="6663d29a-4867-464a-8656-26c1ae2eaced" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('FileError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="22f7939b-b058-4bc1-b4c4-739605d24827" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="67293b1f-0e61-4c98-a47d-7b8b017c3f30" type="SALESFORCE:INVALID_INPUT">
+			<ee:transform doc:name="Transform Message" doc:id="d9771698-0c07-41d7-bbb8-495536949556" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="35860074-3375-44ff-a553-95f3fcc155ea" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="fa064fcc-f644-486a-9769-c4e65b1a8e15" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('SalesForceError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="486bdc52-e168-40ef-9cdb-c4f19a4570d1" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="c5ac1156-bd7c-4c6f-b474-37847211e0a9" type="SALESFORCE:INVALID_RESPONSE">
+			<ee:transform doc:name="Transform Message" doc:id="02b89b06-1b58-4dfa-9e15-ab81c349375c" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="d65aa396-d4e4-4bc4-a214-810cb70365d5" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="955678e2-ecff-48ad-a53b-027275b3f8e1" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('SalesForceError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="c5e41832-ac33-4cfa-813c-19c379de8666" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="3659cff9-156c-4170-98fc-4cc146e0e3de" type="SALESFORCE:LIMIT_EXCEEDED">
+			<ee:transform doc:name="Transform Message" doc:id="ecdec9ab-e56f-4e58-aeea-991a184ec418" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="b2b9d986-b1f1-4e59-92f8-93c3362cab9b" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="b4e66e4f-ef89-401a-a249-b242581607fc" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('SalesForceError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="6ddc4f59-ac1a-4c94-9a98-a99ecdf57b30" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="860704c2-f15d-43e7-86ce-93468d4eb345" type="SALESFORCE:MUTUAL_AUTHENTICATION_FAILED">
+			<ee:transform doc:name="Transform Message" doc:id="fc9419ac-40f4-4ab7-b2e1-7933279baeee" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="5805cb4c-e6ee-48ea-9a2f-7e0cd9965ba4" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="582a1551-8124-4401-89e8-fd2d97b9594d" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('SalesForceError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="5d827bf3-8554-4dd3-8c93-fbe1dac7ebad" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="350eed69-80e1-4267-93ed-eb02bb6d3b18" type="SALESFORCE:NOT_FOUND">
+			<ee:transform doc:name="Transform Message" doc:id="59a121df-db32-461d-827e-daf3cd78f885" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="69bd7073-d9e3-4314-b708-5378377eee24" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="b4fc334e-f4a6-42ea-adb5-ec4acc479b14" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('SalesForceError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="8231b1dc-75fd-4851-b840-29c4f9e75141" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e68b9d7a-9936-4b8b-ab95-261b6eb39b28" type="SALESFORCE:RETRY_EXHAUSTED">
+			<ee:transform doc:name="Transform Message" doc:id="b58e69dd-e0b2-4f5e-a2c4-651b364277a1" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="23b485df-f7ea-4786-910e-0aa1f7fec8e3" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="e7b27ed4-1ba5-4423-86c3-b0faa9db4319" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('SalesForceError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="6c336c65-3eeb-46f2-80f5-6c262a612811" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="6bb5ad97-9afe-433d-b2b7-86dca06c7b3c" type="SALESFORCE:TIMEOUT">
+			<ee:transform doc:name="Transform Message" doc:id="d366da85-26be-4d64-bdd9-940d2a1d9547" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="1abaee94-5d16-4020-bfb2-4f18d3075aff" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="dbd57848-b903-45bd-90ad-8b94b9af1fa7" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('SalesForceError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="2b34bf07-dbac-4400-9407-4e0c3e24cf3c" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="8d8d8f2a-52a7-403f-b448-66a435e0ca02" type="EXPRESSION">
+			<ee:transform doc:name="Transform Message" doc:id="ca4a484e-694d-4115-968e-1569610ab68a" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="11b074c1-7086-49b7-b5cc-f94f6923cc5f" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="46a91553-2692-4366-8aad-8c855b1add4e" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('SalesForceError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="409d952e-6d0f-46f7-9aa9-81fc8e132dc3" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e45c7bc7-346a-4b10-a7ff-bccc052c71ff" type="STREAM_MAXIMUM_SIZE_EXCEEDED">
+			<ee:transform doc:name="Transform Message" doc:id="a495251b-dd4a-4d10-83ab-f695853d01dc" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="baf11115-dcc5-454a-9a54-845de4bfac4d" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="6a98813a-ab42-4adc-a0a1-65ad92b81e52" >
+				<ee:message />
+				<ee:variables >
+					<ee:set-variable variableName="error" ><![CDATA[p('SalesForceError')]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="cfde466e-8609-4a86-9448-026847efbafc" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+		</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="eff4f1d3-a4fb-4be1-9073-8e31cdb5a735" type="ANY">
+			<ee:transform doc:name="Transform Message" doc:id="27896f5f-555f-414c-9fd9-6ba301fb952f">
+				<ee:message>
+					<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="8a6c93dd-3569-4469-92fd-7ea9ff31ae86" message='#[%dw 2.0
+output application/json
+---
+{
+	"errorType": error.errorType.identifier,
+	 "errorMessage": error.description
+	 }]' />
+			<ee:transform doc:name="Transform Message" doc:id="9023c847-17a7-4377-b61d-f3a8f756effa">
+				<ee:message />
+				<ee:variables>
+					<ee:set-variable variableName="error"><![CDATA["AnyError"]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<email:send doc:name="MailSend" doc:id="9f75709c-6177-4f87-a312-35aa26eef569" config-ref="Email_SMTP" fromAddress="iampriyamn@gmail.com" subject='#["Error "]' >
+				<email:to-addresses >
+					<email:to-address value="priyankamn0507@gmail.com" />
+				</email:to-addresses>
+				<email:body contentType="text/plain" >
+					<email:content ><![CDATA[Please find the attachment]]></email:content>
+				</email:body>
+				<email:attachments ><![CDATA[#[{
+	"Payload": payload
+}]]]></email:attachments>
+			</email:send>
+</on-error-propagate>
+	
+</error-handler>
+</mule>

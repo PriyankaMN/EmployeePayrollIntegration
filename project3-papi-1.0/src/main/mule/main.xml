@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<flow name="project3-papi-1Flow" doc:id="8dd6948c-2c81-41c4-aec4-a8b5ea05a9e7" >
+		<scheduler doc:name="Scheduler" doc:id="b10f3ddd-9ded-4902-bc7f-71d591a025cd" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="1" timeUnit="MINUTES" />
+			</scheduling-strategy>
+		</scheduler>
+		<set-variable value="#[correlationId]" doc:name="Set Variable" doc:id="d7d935b3-d0ef-4f1b-86ce-39cf958fc160" variableName="CorelationId"/>
+		<logger level="INFO" doc:name="Start Logger" doc:id="5f10a2f1-cf74-4b98-9c9a-e76001865230" message='#["Start Logger " ++ vars.CorelationId]'/>
+		<flow-ref doc:name="flowReferenceDataBaseData" doc:id="0034a787-b8a6-451e-95e3-fe85fcbf7350" name="dataBaseData" />
+		<flow-ref doc:name="flowReferenceSFTP" doc:id="5bd3a775-9634-4896-b143-2ac7dd9eccaf" name="SFTPData" />
+		<flow-ref doc:name="flowReferenceSalesForce" doc:id="d4a71adb-ead4-4f57-aeb4-74dcc7571143" name="SalesForceData" />
+		<logger level="INFO" doc:name="End Logger" doc:id="036bb565-606f-4afc-8dd8-9fbe789c7ba4" message='#["End Logger " ++ vars.CorelationId]'/>
+		<error-handler ref="globalErrorHandlerError_Handler" />
+	</flow>
+</mule>

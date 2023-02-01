@@ -1,0 +1,6 @@
+%dw 2.0
+
+type auto_8dd6948c_2c81_41c4_aec4_a8b5ea05a9e7_Output_Variables_error = {|  |} {"typeAlias": "Object",
+"class": "java.lang.Object",
+"typeId": "java.lang.Object"}
+

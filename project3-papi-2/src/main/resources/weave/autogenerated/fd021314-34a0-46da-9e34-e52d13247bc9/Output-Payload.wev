@@ -1,0 +1,31 @@
+%dw 2.0
+
+type auto_fd021314_34a0_46da_9e34_e52d13247bc9_Output_Payload = Array<Employee__c>
+type Employee__c = {|
+  Id?: String {"typeId": "Id"}, 
+  OwnerId?: String, 
+  IsDeleted?: Boolean {"typeId": "IsDeleted"}, 
+  Name?: String {"typeId": "Name"}, 
+  CreatedDate?: DateTime {"typeId": "CreatedDate"}, 
+  CreatedById?: String, 
+  LastModifiedDate?: DateTime {"typeId": "LastModifiedDate"}, 
+  LastModifiedById?: String, 
+  SystemModstamp?: DateTime {"typeId": "SystemModstamp"}, 
+  LastViewedDate?: DateTime {"typeId": "LastViewedDate"}, 
+  LastReferencedDate?: DateTime {"typeId": "LastReferencedDate"}, 
+  Address__c?: String {"typeId": "Address__c"}, 
+  Emp_Id__c?: String {"typeId": "Emp_Id__c"}, 
+  Payment_Status__c?: String {"typeId": "Payment_Status__c"}, 
+  Date_of_Birth__c?: Date {"typeId": "Date_of_Birth__c"}, 
+  Joining_Date__c?: Date {"typeId": "Joining_Date__c"}, 
+  Termination_Date__c?: Date {"typeId": "Termination_Date__c"}, 
+  First_Name__c?: String {"typeId": "First_Name__c"}, 
+  Phone_Number__c?: String {"typeId": "Phone_Number__c"}, 
+  Status__c?: String {"typeId": "Status__c"}, 
+  Employee_Status__c?: String {"typeId": "Employee_Status__c"}, 
+  Last_Name__c?: String {"typeId": "Last_Name__c"}, 
+  fieldsToNull?: Array<String {"typeId": "fieldsToNull"}>
+|} {"typeId": "Employee__c"}
+
+
+

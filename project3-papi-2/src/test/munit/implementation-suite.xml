@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="implementation-suite.xml" />
+	<munit:test name="SFTP-test" doc:id="7e976118-e72a-425a-af5a-c48333fbffdd" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock ReadPath" doc:id="7d9a441a-bed7-47df-b76f-07dfbd917208" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="70ff0a64-b8e6-4a3c-8e5b-c00c7af05171" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output text/csv --- readUrl('classpath://SFTPtest\mock_payload.dwl')]" mediaType="text/csv" encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://SFTPtest\mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="CorelationId" value="#[readUrl('classpath://SFTPtest\mock_variable_.dwl')]" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock Write" doc:id="7fee3af8-fa1c-4ef4-a114-a6d855ff94ce" processor="file:write">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="3d502eed-e9f6-441b-b03c-595c4ef13c29" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/csv --- readUrl('classpath://SFTPtest\mock_payload1.dwl')]" mediaType="application/csv" encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://SFTPtest\mock_attributes1.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="CorelationId" value="#[readUrl('classpath://SFTPtest\mock_variable_1.dwl')]" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="fc91821d-cab7-4fd9-aac6-8712f3313b22" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SFTPtest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SFTPtest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SFTPtest\set-event_variable_.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to SFTP" doc:id="c8448d0f-24b1-423e-a2af-630c5eae5f62" name="SFTP"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="6e1b7a12-c1bf-4974-958a-006d0b160d18" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import SFTPtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<flow name="mock-db:update" doc:id="c85d4f01-88b7-40a2-a91a-4470247b02cf" >
+		<try doc:name="Try" doc:id="efe22da4-276c-447c-a11a-771b5e5ea24b" >
+			<munit-tools:retrieve doc:name="Retrieve" doc:id="f5bbb07b-b8dc-42a7-bf95-1c7482433957" key="Mock Update"/>
+			<error-handler >
+				<on-error-continue enableNotifications="false" logException="false" doc:name="On Error Continue" doc:id="963083d8-ef43-40f9-82a6-9e614dd60246" type="ANY">
+					<set-payload value="#[1]" doc:name="Set Payload" doc:id="1b7edcd2-a859-46cd-88a1-31f9f3b1d07d" />
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<munit-tools:store doc:name="Store" doc:id="a7a70e7d-d9ac-4486-be42-aa986c87003d" key="Mock Update">
+			<munit-tools:value ><![CDATA[#[payload + 1]]]></munit-tools:value>
+		</munit-tools:store>
+		<choice doc:name="Choice" doc:id="9ddb326b-d10b-443c-bb10-f26bc2ddb0b9" >
+			<when expression="#[payload == 1]">
+				<munit:set-event doc:name="Set Event" doc:id="4d6e8b8d-902e-4b87-85a0-7792ce6be7dd" >
+					<munit:payload value="#[output application/java --- readUrl('classpath://DataBasetest\mock_payload.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variables >
+						<munit:variable key="rootMessage" value="#[readUrl('classpath://DataBasetest\mock_variable_.dwl')]" />
+						<munit:variable key="CorelationId" value="#[readUrl('classpath://DataBasetest\mock_variable_1.dwl')]" encoding="UTF-8" />
+						<munit:variable key="counter" value="#[readUrl('classpath://DataBasetest\mock_variable_2.dwl')]" />
+					</munit:variables>
+				</munit:set-event>
+			</when>
+			<when expression="#[payload == 2]">
+				<munit:set-event doc:name="Set Event" doc:id="81d72d19-f229-42a2-a22b-ff650bdb9e15" >
+					<munit:payload value="#[output application/java --- readUrl('classpath://DataBasetest\mock_payload1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variables >
+						<munit:variable key="rootMessage" value="#[readUrl('classpath://DataBasetest\mock_variable_3.dwl')]" />
+						<munit:variable key="CorelationId" value="#[readUrl('classpath://DataBasetest\mock_variable_4.dwl')]" encoding="UTF-8" />
+						<munit:variable key="counter" value="#[readUrl('classpath://DataBasetest\mock_variable_5.dwl')]" />
+					</munit:variables>
+				</munit:set-event>
+			</when>
+			<when expression="#[payload == 3]">
+				<munit:set-event doc:name="Set Event" doc:id="b62f8773-7ffe-40fe-a34d-05f1037d8478" >
+					<munit:payload value="#[output application/java --- readUrl('classpath://DataBasetest\mock_payload2.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variables >
+						<munit:variable key="rootMessage" value="#[readUrl('classpath://DataBasetest\mock_variable_6.dwl')]" />
+						<munit:variable key="CorelationId" value="#[readUrl('classpath://DataBasetest\mock_variable_7.dwl')]" encoding="UTF-8" />
+						<munit:variable key="counter" value="#[readUrl('classpath://DataBasetest\mock_variable_8.dwl')]" />
+					</munit:variables>
+				</munit:set-event>
+			</when>
+			<when expression="#[payload == 4]">
+				<munit:set-event doc:name="Set Event" doc:id="c53e328f-a428-472f-a221-272e45d2f6f7" >
+					<munit:payload value="#[output application/java --- readUrl('classpath://DataBasetest\mock_payload3.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variables >
+						<munit:variable key="rootMessage" value="#[readUrl('classpath://DataBasetest\mock_variable_9.dwl')]" />
+						<munit:variable key="CorelationId" value="#[readUrl('classpath://DataBasetest\mock_variable_10.dwl')]" encoding="UTF-8" />
+						<munit:variable key="counter" value="#[readUrl('classpath://DataBasetest\mock_variable_11.dwl')]" />
+					</munit:variables>
+				</munit:set-event>
+			</when>
+			<when expression="#[payload == 5]">
+				<munit:set-event doc:name="Set Event" doc:id="f0d8defd-d422-4bab-bd30-37b50e657a90" >
+					<munit:payload value="#[output application/java --- readUrl('classpath://DataBasetest\mock_payload4.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variables >
+						<munit:variable key="rootMessage" value="#[readUrl('classpath://DataBasetest\mock_variable_12.dwl')]" />
+						<munit:variable key="CorelationId" value="#[readUrl('classpath://DataBasetest\mock_variable_13.dwl')]" encoding="UTF-8" />
+						<munit:variable key="counter" value="#[readUrl('classpath://DataBasetest\mock_variable_14.dwl')]" />
+					</munit:variables>
+				</munit:set-event>
+			</when>
+			<when expression="#[payload == 6]">
+				<munit:set-event doc:name="Set Event" doc:id="8fc6553a-eb41-4b99-9fe3-a6f3e2f58991" >
+					<munit:payload value="#[output application/java --- readUrl('classpath://DataBasetest\mock_payload5.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variables >
+						<munit:variable key="rootMessage" value="#[readUrl('classpath://DataBasetest\mock_variable_15.dwl')]" />
+						<munit:variable key="CorelationId" value="#[readUrl('classpath://DataBasetest\mock_variable_16.dwl')]" encoding="UTF-8" />
+						<munit:variable key="counter" value="#[readUrl('classpath://DataBasetest\mock_variable_17.dwl')]" />
+					</munit:variables>
+				</munit:set-event>
+			</when>
+			<otherwise >
+				<munit-tools:fail doc:name="Fail" doc:id="c9d9df82-bbf1-437d-8526-50b47c35ab11" message="There are no more events to mock"/>
+			</otherwise>
+		</choice>
+	</flow>
+	<munit:test name="DataBase-test" doc:id="40220587-2b6c-4e63-88d8-43e9c4a0e4b0" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Update" doc:id="f4c8ed19-3627-431d-ae76-778915c9fa98" processor="db:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="261284d4-1356-41d2-9fcc-d353d5c4d9b0" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-call flow="mock-db:update" />
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock ReadPath" doc:id="bd2f8646-76b9-47c5-89b7-9c2d1042166c" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cb3a4883-b7df-4137-a2e4-5592bb0d195d" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output text/csv --- readUrl('classpath://DataBasetest\mock_payload6.dwl')]" mediaType="text/csv" encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://DataBasetest\mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="CorelationId" value="#[readUrl('classpath://DataBasetest\mock_variable_18.dwl')]" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="24af54b8-afda-4286-8a6d-c582752fd2c6" >
+				<munit:payload value="#[readUrl('classpath://DataBasetest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://DataBasetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://DataBasetest\set-event_variable_.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to DataBase" doc:id="60128f92-1181-435c-b2f4-e665e6702bc8" name="DataBase"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-that doc:name="Assert that" doc:id="2adadba5-ae28-4a30-942f-95d339db9237" is='#[MunitTools::equalTo("data Updated")]' expression="#[vars.updateData]"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SalesForce-test" doc:id="f76a9c24-81c9-4718-bf33-d78deb6077a4" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Update" doc:id="3bde7011-e0c2-4a29-8063-3027e1e5d228" processor="salesforce:update">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="cf0aa757-5a44-4ae7-951d-17a8d0be67fd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://SalesForcetest\mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="CorelationId" value="#[readUrl('classpath://SalesForcetest\mock_variable_.dwl')]" encoding="UTF-8" />
+						<munit-tools:variable key="updateData" value="#[output application/java --- readUrl('classpath://SalesForcetest\mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="flow" value="#[readUrl('classpath://SalesForcetest\mock_variable_2.dwl')]" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit-tools:mock-when doc:name="Mock ReadPath" doc:id="2992e954-a2fa-4e5c-ae26-6722cb95fa95" processor="flow-ref">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="1f66a804-a3bd-42d1-8582-0af5558ba8ae" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output text/csv --- readUrl('classpath://SalesForcetest\mock_payload1.dwl')]" mediaType="text/csv" encoding="UTF-8" />
+					<munit-tools:attributes value="#[readUrl('classpath://SalesForcetest\mock_attributes.dwl')]" />
+					<munit-tools:variables >
+						<munit-tools:variable key="CorelationId" value="#[readUrl('classpath://SalesForcetest\mock_variable_3.dwl')]" encoding="UTF-8" />
+						<munit-tools:variable key="updateData" value="#[output application/java --- readUrl('classpath://SalesForcetest\mock_variable_4.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="flow" value="#[readUrl('classpath://SalesForcetest\mock_variable_5.dwl')]" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="f3a0a586-5d3a-4503-b614-73f60a4b99c1" >
+				<munit:payload value="#[output application/json --- readUrl('classpath://SalesForcetest\set-event_payload.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				<munit:attributes value="#[readUrl('classpath://SalesForcetest\set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForcetest\set-event_variable_.dwl')]" encoding="UTF-8" />
+					<munit:variable key="updateData" value="#[output application/java --- readUrl('classpath://SalesForcetest\set-event_variable_1.dwl')]" encoding="UTF-8" mediaType="application/java" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to SalesForce" doc:id="e6de0008-a085-4b56-8fba-093dce6ff20a" name="SalesForce"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="f2f1c22f-e40d-4e0b-a87b-b17a5542e558" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import SalesForcetest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

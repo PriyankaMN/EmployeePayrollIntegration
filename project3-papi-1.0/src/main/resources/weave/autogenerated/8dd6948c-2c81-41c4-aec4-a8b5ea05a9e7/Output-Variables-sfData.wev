@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_8dd6948c_2c81_41c4_aec4_a8b5ea05a9e7_Output_Variables_sfData = Array<{|  Emp_Id: String,   First_Name: String,   Last_Name: String,   Joining_Date: String | Date {"format": "yyyy-MM-dd"},   Address: String,   DateOfBirth: String | Date {"format": "yyyy-MM-dd"},   Phone_Number: String | Null,   Employee_Status: String {"typeId": "Employee_Status__c"},   Payment_Status: String {"typeId": "Payment_Status__c"}|}>
+

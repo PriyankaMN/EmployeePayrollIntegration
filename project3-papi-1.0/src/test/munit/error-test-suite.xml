@@ -1,0 +1,677 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="error-test-suite.xml" />
+	<munit:test name="DB:CONNECTIVITY" doc:id="90ca8ca8-b111-4fb3-a467-6a9c5a1460c1">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Select" doc:id="be2c9051-0f3e-4a0a-8c99-ec0ac8ebb279" processor="db:select" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="8c5ec5e5-3981-4c6b-a0ec-ede9303777dd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="DB:CONNECTIVITY" />
+					<munit-tools:variables >
+						<munit-tools:variable key="CorelationId" value="#[readUrl('classpath://dataBaseDatatest\mock_variable_.dwl')]" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="175c389e-27ad-490f-ae7a-7bebb450b0b9" >
+				<munit:payload value="#[readUrl('classpath://dataBaseDatatest\set-event_payload.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://dataBaseDatatest\set-event_variable_.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="e40fdbfa-6b7e-4b5d-8ae9-3722d74bebe6" >
+				<flow-ref doc:name="DB:CONNECTIVITY" doc:id="3844ca1b-a531-4eb8-9e3a-786e8b6a723e" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="699b802e-262f-49cc-b755-99cad0017805" >
+						<logger level="INFO" doc:name="Logger" doc:id="a6fdb64c-6fdb-4775-8935-412056f699a2" message="#[payload]"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="1513f658-4c30-4876-b121-c1c8903198aa" actual="#[vars.error]" expected='#["DataBaseError"]'/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SALESFORCE:CONNECTIVITY" doc:id="a05b63ca-6544-4da1-a64c-15a50520c11d">
+	<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock Set Payload" doc:id="9fbe5b0b-15a7-4442-af17-0fe7a504809b" processor="set-payload">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="dcad5275-c1a2-4fdb-9bab-140db968add1" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					
+					<munit-tools:error typeId="SALESFORCE:CONNECTIVITY" />
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="f7d29110-bdb5-4f1b-ad43-b35c7bad36db">
+				<munit:payload value="#[readUrl('classpath://SalesForceDatatest\set-event_payload1.dwl')]" />
+				<munit:variables>
+					<munit:variable key="FileName" value="#[readUrl('classpath://SalesForceDatatest\set-event_variable_5.dwl')]" />
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForceDatatest\set-event_variable_6.dwl')]" encoding="UTF-8" />
+					<munit:variable key="sftpData" value="#[output application/json --- readUrl('classpath://SalesForceDatatest\set-event_variable_7.dwl')]" encoding="UTF-8" mediaType="application/json" />
+					<munit:variable key="copy" value="#[output application/java --- readUrl('classpath://SalesForceDatatest\set-event_variable_8.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variable key="dbData" value="#[output application/json --- readUrl('classpath://SalesForceDatatest\set-event_variable_9.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="668f7fa2-ee74-40cd-aed5-c9d445206aca">
+				<flow-ref doc:name="Copy_of_FILE:RETRY_EXHAUSTED" doc:id="0dd2da47-2686-44a8-a8ef-3ed5f8c72427" name="project3-papi-1Flow" />
+				<error-handler>
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="bf775ef9-d67b-49dd-b3d5-bfee99358f84">
+						<logger level="INFO" doc:name="Logger" doc:id="6e899e66-cc5c-450f-b5dd-52197f0f712c" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="088bbcd9-6c46-482c-8ed5-a70308296573" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="DB:QUERY_EXECUTION" doc:id="d0054afa-8add-4e39-84d2-67e1ad596030">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Select" doc:id="32d472a3-cc7a-478e-a3a7-e92594ca0aff" processor="db:select">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="8c5ec5e5-3981-4c6b-a0ec-ede9303777dd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:error typeId="DB:QUERY_EXECUTION" />
+					<munit-tools:variables>
+						<munit-tools:variable key="CorelationId" value="#[readUrl('classpath://dataBaseDatatest\mock_variable_.dwl')]" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="275c6261-b12e-4d50-ab28-71e9ec7ea0ea" >
+				<munit:payload value="#[readUrl('classpath://dataBaseDatatest\set-event_payload.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://dataBaseDatatest\set-event_variable_.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="4609f7bc-0f44-43a2-b97b-a532a6c561f3" >
+				<flow-ref doc:name="DB:QUERY_EXECUTION" doc:id="8284c771-1465-457e-b2d2-8bf8b9a2c086" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="feebb79e-da10-4dd5-8cab-2f85e7dd3e00" >
+						<logger level="INFO" doc:name="Logger" doc:id="96297680-6b53-459d-afa1-e6fcbeddc336" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="d979b49d-f5f9-4241-926f-204e1a4f39dc" actual="#[vars.error]" expected='#["DataBaseError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="DB:BAD_SQL_SYNTAX" doc:id="20d24ae2-9a2d-4a31-ad3f-33b48672bf12">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Select" doc:id="dbaa09fb-2595-4641-9e65-3917bfd0c903" processor="db:select" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="8c5ec5e5-3981-4c6b-a0ec-ede9303777dd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="DB:BAD_SQL_SYNTAX" />
+					<munit-tools:variables >
+						<munit-tools:variable key="CorelationId" value="#[readUrl('classpath://dataBaseDatatest\mock_variable_.dwl')]" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="24e2f123-a226-4ae3-bf42-48c7263b49e3" >
+				<munit:payload value="#[readUrl('classpath://dataBaseDatatest\set-event_payload.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://dataBaseDatatest\set-event_variable_.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="c6977b55-1a0b-4e31-aeff-0dafae166502" >
+				<flow-ref doc:name="DB:QUERY_EXECUTION" doc:id="567a073a-ef2f-4b1c-8fda-62518e87f8d5" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="cf8263ee-9f23-4838-98c2-5579a945ac7d" >
+						<logger level="INFO" doc:name="Logger" doc:id="37e3aab8-d055-448f-a74e-bd9577bbedb7" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="b4a20c97-9706-4325-b841-43e9d3e9c00f" actual="#[vars.error]" expected='#["DataBaseError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="DB:RETRY_EXHAUSTED" doc:id="ffc81aba-bd69-4026-bbf8-36f811c80cce">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Select" doc:id="9551e480-2711-482b-b939-32dd79377131" processor="db:select" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="8c5ec5e5-3981-4c6b-a0ec-ede9303777dd" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="DB:RETRY_EXHAUSTED" />
+					<munit-tools:variables >
+						<munit-tools:variable key="CorelationId" value="#[readUrl('classpath://dataBaseDatatest\mock_variable_.dwl')]" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="05004fac-68b2-4938-bb4d-dd94ddbc037e" >
+				<munit:payload value="#[readUrl('classpath://dataBaseDatatest\set-event_payload.dwl')]" />
+				<munit:variables >
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://dataBaseDatatest\set-event_variable_.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="fdeb9910-e097-4738-9409-023a2991a31f" >
+				<flow-ref doc:name="DB:RETRY_EXHAUSTED" doc:id="511e1aa9-8802-4d11-9bcb-0d87ae54d21d" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="9cbe8940-ad3f-417f-8f27-64925f0b77eb" >
+						<logger level="INFO" doc:name="Logger" doc:id="fed7e293-281b-4e76-890d-22b0b04e9b6c" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="8801f784-55dd-429b-8fe5-7b988c5ee47c" actual="#[vars.error]" expected='#["DataBaseError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="FILE:ACCESS_DENIED" doc:id="9c774529-c2c2-42dd-8cb9-935fff439ee8" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Read" doc:id="17ed0de1-8a89-402a-905c-ea184cd318cd" processor="file:read" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="196743ae-fd0a-40f3-8d53-8045d134809c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="FILE:ACCESS_DENIED" />
+					<munit-tools:variables >
+						<munit-tools:variable key="FileName" value="#[readUrl('classpath://SFTPDatatest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="CorelationId" value="#[readUrl('classpath://SFTPDatatest\mock_variable_1.dwl')]" encoding="UTF-8" />
+						<munit-tools:variable key="copy" value="#[output application/java --- readUrl('classpath://SFTPDatatest\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="dbData" value="#[output application/json --- readUrl('classpath://SFTPDatatest\mock_variable_3.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="dd88180b-e312-4276-a716-9c2a26b4d7ed" >
+				<munit:payload value="#[readUrl('classpath://SFTPDatatest\set-event_payload.dwl')]" />
+				<munit:variables >
+					<munit:variable key="FileName" value="#[readUrl('classpath://SFTPDatatest\set-event_variable_.dwl')]" />
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SFTPDatatest\set-event_variable_1.dwl')]" encoding="UTF-8" />
+					<munit:variable key="copy" value="#[output application/java --- readUrl('classpath://SFTPDatatest\set-event_variable_2.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variable key="dbData" value="#[output application/json --- readUrl('classpath://SFTPDatatest\set-event_variable_3.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="15b2dd4c-fea6-45fb-82e5-a03a645cfde3" >
+				<flow-ref doc:name="FILE:ACCESS_DENIED" doc:id="3e983450-3a02-4f99-b73a-9ac5a3b93010" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="bdef71ed-3beb-4253-970c-d36e2e232966" >
+						<logger level="INFO" doc:name="Logger" doc:id="ae0f0a26-dfc0-4bd5-955d-37e05785880f" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="40319a73-0a22-42ed-91f1-0d9e5faf9785" actual="#[vars.error]" expected='#["FileError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="FILE:CONNECTIVITY" doc:id="ff5cbe3a-fa00-4f19-8fd7-521a7dc98c31" >
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock Read" doc:id="23acc211-bfdb-4493-abf6-1e7809c6f996" processor="file:read">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="196743ae-fd0a-40f3-8d53-8045d134809c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="FILE:CONNECTIVITY" />
+					<munit-tools:variables >
+						<munit-tools:variable key="FileName" value="#[readUrl('classpath://SFTPDatatest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="CorelationId" value="#[readUrl('classpath://SFTPDatatest\mock_variable_1.dwl')]" encoding="UTF-8" />
+						<munit-tools:variable key="copy" value="#[output application/java --- readUrl('classpath://SFTPDatatest\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="dbData" value="#[output application/json --- readUrl('classpath://SFTPDatatest\mock_variable_3.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="301c03bb-688a-4e37-b99a-eca31d0c507b" >
+				<munit:payload value="#[readUrl('classpath://SFTPDatatest\set-event_payload.dwl')]" />
+				<munit:variables >
+					<munit:variable key="FileName" value="#[readUrl('classpath://SFTPDatatest\set-event_variable_.dwl')]" />
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SFTPDatatest\set-event_variable_1.dwl')]" encoding="UTF-8" />
+					<munit:variable key="copy" value="#[output application/java --- readUrl('classpath://SFTPDatatest\set-event_variable_2.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variable key="dbData" value="#[output application/json --- readUrl('classpath://SFTPDatatest\set-event_variable_3.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="f788a114-5a9b-4c5b-a306-92e4d807147d" >
+				<flow-ref doc:name="FILE:CONNECTIVITY" doc:id="3d8a189b-6301-46f8-8f88-630d9a8e1b0a" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="fec3d06c-18b0-4202-ab80-7e9789981267" >
+						<logger level="INFO" doc:name="Logger" doc:id="3c0dd695-3bab-4795-abc4-1ca7aadab4b4" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="31eeeff6-8935-45ae-825e-b1028a7edc5e" actual="#[vars.error]" expected='#["FileError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="FILE:FILE_ALREADY_EXISTS" doc:id="2e771cf0-aa7e-4e4b-bc0a-7f7b5deaf86d" >
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock Read" doc:id="9c0d9240-43a0-4746-861a-e96ad4645085" processor="file:read">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="196743ae-fd0a-40f3-8d53-8045d134809c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="FILE:FILE_ALREADY_EXISTS" />
+					<munit-tools:variables >
+						<munit-tools:variable key="FileName" value="#[readUrl('classpath://SFTPDatatest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="CorelationId" value="#[readUrl('classpath://SFTPDatatest\mock_variable_1.dwl')]" encoding="UTF-8" />
+						<munit-tools:variable key="copy" value="#[output application/java --- readUrl('classpath://SFTPDatatest\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="dbData" value="#[output application/json --- readUrl('classpath://SFTPDatatest\mock_variable_3.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="c09e1917-e80e-4b35-a32e-ebb56a731bba" >
+				<munit:payload value="#[readUrl('classpath://SFTPDatatest\set-event_payload.dwl')]" />
+				<munit:variables >
+					<munit:variable key="FileName" value="#[readUrl('classpath://SFTPDatatest\set-event_variable_.dwl')]" />
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SFTPDatatest\set-event_variable_1.dwl')]" encoding="UTF-8" />
+					<munit:variable key="copy" value="#[output application/java --- readUrl('classpath://SFTPDatatest\set-event_variable_2.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variable key="dbData" value="#[output application/json --- readUrl('classpath://SFTPDatatest\set-event_variable_3.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="27617ba2-c681-4d27-b06a-bb83d9565af5" >
+				<flow-ref doc:name="FILE:FILE_ALREADY_EXISTS" doc:id="4c8a7e8b-9d58-4904-bcf5-880c268792f1" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="33474e1a-277a-44b1-8389-96abecbcb2a5" >
+						<logger level="INFO" doc:name="Logger" doc:id="197fc5d8-bf6a-494a-90d8-119c542212be" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="50422af1-cb7a-404d-a51e-3895b58aab9c" actual="#[vars.error]" expected='#["FileError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="FILE:FILE_LOCK" doc:id="5f296577-d6e5-48ec-b719-003e2cb3f0f9" >
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock Read" doc:id="50f249a7-157c-4618-a1ea-071b97b22aa2" processor="file:read" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="196743ae-fd0a-40f3-8d53-8045d134809c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="FILE:FILE_LOCK" />
+					<munit-tools:variables >
+						<munit-tools:variable key="FileName" value="#[readUrl('classpath://SFTPDatatest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="CorelationId" value="#[readUrl('classpath://SFTPDatatest\mock_variable_1.dwl')]" encoding="UTF-8" />
+						<munit-tools:variable key="copy" value="#[output application/java --- readUrl('classpath://SFTPDatatest\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="dbData" value="#[output application/json --- readUrl('classpath://SFTPDatatest\mock_variable_3.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="c3b2cbef-8612-4b48-80a8-5fe3510ce971" >
+				<munit:payload value="#[readUrl('classpath://SFTPDatatest\set-event_payload.dwl')]" />
+				<munit:variables >
+					<munit:variable key="FileName" value="#[readUrl('classpath://SFTPDatatest\set-event_variable_.dwl')]" />
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SFTPDatatest\set-event_variable_1.dwl')]" encoding="UTF-8" />
+					<munit:variable key="copy" value="#[output application/java --- readUrl('classpath://SFTPDatatest\set-event_variable_2.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variable key="dbData" value="#[output application/json --- readUrl('classpath://SFTPDatatest\set-event_variable_3.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="bac991f0-15b7-45a1-aedf-7d5a27e50c20" >
+				<flow-ref doc:name="FILE:FILE_LOCK" doc:id="8ea18525-0980-434e-8720-870d98edc444" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="f2824605-11eb-48a1-9b9c-84e78cbf5ec4" >
+						<logger level="INFO" doc:name="Logger" doc:id="31f5826d-a876-4aee-abb4-79613bf7d595" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="57bb23f7-a4fe-41b8-bf23-dcbe35b5addc" actual="#[vars.error]" expected='#["FileError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="FILE:ILLEGAL_PATH" doc:id="846f8abd-cc8d-4e48-8d46-23c677a9fd08" >
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock Read" doc:id="891e3330-651d-460d-8dc0-0cd30bd1ca0e" processor="file:read" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="196743ae-fd0a-40f3-8d53-8045d134809c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="FILE:ILLEGAL_PATH" />
+					<munit-tools:variables >
+						<munit-tools:variable key="FileName" value="#[readUrl('classpath://SFTPDatatest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="CorelationId" value="#[readUrl('classpath://SFTPDatatest\mock_variable_1.dwl')]" encoding="UTF-8" />
+						<munit-tools:variable key="copy" value="#[output application/java --- readUrl('classpath://SFTPDatatest\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="dbData" value="#[output application/json --- readUrl('classpath://SFTPDatatest\mock_variable_3.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="8b75173a-717b-48e5-8eb1-7d2611b16802" >
+				<munit:payload value="#[readUrl('classpath://SFTPDatatest\set-event_payload.dwl')]" />
+				<munit:variables >
+					<munit:variable key="FileName" value="#[readUrl('classpath://SFTPDatatest\set-event_variable_.dwl')]" />
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SFTPDatatest\set-event_variable_1.dwl')]" encoding="UTF-8" />
+					<munit:variable key="copy" value="#[output application/java --- readUrl('classpath://SFTPDatatest\set-event_variable_2.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variable key="dbData" value="#[output application/json --- readUrl('classpath://SFTPDatatest\set-event_variable_3.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="dc1cb5ae-eb50-451c-a565-75e985522b89" >
+				<flow-ref doc:name="Copy_of_DB:RETRY_EXHAUSTED" doc:id="6b380565-630d-4564-8c56-f1e7497041a9" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="7fff03a5-aa75-477a-afd4-1652e8041ae3" >
+						<logger level="INFO" doc:name="Logger" doc:id="e6405a20-a518-471a-b545-4ea43a45efb7" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="2c547313-47af-4d0f-a55a-f983ef3bfb62" actual="#[vars.error]" expected='#["FileError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="FILE:RETRY_EXHAUSTED" doc:id="b3e06e66-37e4-4bb8-8eb8-29f3e38faa09" >
+		<munit:behavior>
+			<munit-tools:mock-when doc:name="Mock Read" doc:id="0b3c0c33-2c30-4096-8e65-e87a0f04273b" processor="file:read" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="196743ae-fd0a-40f3-8d53-8045d134809c" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="FILE:RETRY_EXHAUSTED" />
+					<munit-tools:variables >
+						<munit-tools:variable key="FileName" value="#[readUrl('classpath://SFTPDatatest\mock_variable_.dwl')]" />
+						<munit-tools:variable key="CorelationId" value="#[readUrl('classpath://SFTPDatatest\mock_variable_1.dwl')]" encoding="UTF-8" />
+						<munit-tools:variable key="copy" value="#[output application/java --- readUrl('classpath://SFTPDatatest\mock_variable_2.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="dbData" value="#[output application/json --- readUrl('classpath://SFTPDatatest\mock_variable_3.dwl')]" mediaType="application/json" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			
+</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="0bc72262-bb5c-41ae-8b37-bffce9ee6899" >
+				<munit:payload value="#[readUrl('classpath://SFTPDatatest\set-event_payload.dwl')]" />
+				<munit:variables >
+					<munit:variable key="FileName" value="#[readUrl('classpath://SFTPDatatest\set-event_variable_.dwl')]" />
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SFTPDatatest\set-event_variable_1.dwl')]" encoding="UTF-8" />
+					<munit:variable key="copy" value="#[output application/java --- readUrl('classpath://SFTPDatatest\set-event_variable_2.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variable key="dbData" value="#[output application/json --- readUrl('classpath://SFTPDatatest\set-event_variable_3.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="4af9415e-688e-4a74-9838-1519f9de66b2" >
+				<flow-ref doc:name="FILE:RETRY_EXHAUSTED" doc:id="bd99dd47-c441-458a-a391-79297faa6e27" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="83b59073-c02b-4321-8ca0-7fc5459f2e8b" >
+						<logger level="INFO" doc:name="Logger" doc:id="c470f154-d106-401c-8655-bd707843a99c" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="14293244-faa1-4c6c-8f72-6ea527f3643f" actual="#[vars.error]" expected='#["FileError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SALESFORCE:TIMEOUT" doc:id="c6aa32be-a426-4a83-b6c6-cef267368d0f" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Set Payload" doc:id="834a6f27-8d1e-4764-9626-cbbe48593c15" processor="set-payload" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="dcad5275-c1a2-4fdb-9bab-140db968add1" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SALESFORCE:TIMEOUT" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="c0d74985-6e47-4eed-82f4-eda88742bb21" >
+				<munit:payload value="#[readUrl('classpath://SalesForceDatatest\set-event_payload1.dwl')]" />
+				<munit:variables >
+					<munit:variable key="FileName" value="#[readUrl('classpath://SalesForceDatatest\set-event_variable_5.dwl')]" />
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForceDatatest\set-event_variable_6.dwl')]" encoding="UTF-8" />
+					<munit:variable key="sftpData" value="#[output application/json --- readUrl('classpath://SalesForceDatatest\set-event_variable_7.dwl')]" encoding="UTF-8" mediaType="application/json" />
+					<munit:variable key="copy" value="#[output application/java --- readUrl('classpath://SalesForceDatatest\set-event_variable_8.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variable key="dbData" value="#[output application/json --- readUrl('classpath://SalesForceDatatest\set-event_variable_9.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="e5a66eaa-3c6a-494f-8700-139f23d2b73a" >
+				<flow-ref doc:name="SALESFORCE:TIMEOUT" doc:id="702be0bc-48f2-4026-b1f9-3407fe1a8d1f" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="8dda779c-b701-415d-a6ff-47ca2141b570" >
+						<logger level="INFO" doc:name="Logger" doc:id="0425cec5-f3d8-4508-be98-e1f6de8b7e32" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="6814c4ae-f347-41a1-959c-6b78dd164790" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SALESFORCE:INVALID_INPUT" doc:id="4be3a5ca-0b6a-4e10-9669-721500d2e07d" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Set Payload" doc:id="cc78d5d6-2f1a-47e3-b7f8-7e2fdfb16f83" processor="set-payload" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="dcad5275-c1a2-4fdb-9bab-140db968add1" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SALESFORCE:INVALID_INPUT" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="12ac1ffa-92cf-4850-8385-6417d31c1890" >
+				<munit:payload value="#[readUrl('classpath://SalesForceDatatest\set-event_payload1.dwl')]" />
+				<munit:variables >
+					<munit:variable key="FileName" value="#[readUrl('classpath://SalesForceDatatest\set-event_variable_5.dwl')]" />
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForceDatatest\set-event_variable_6.dwl')]" encoding="UTF-8" />
+					<munit:variable key="sftpData" value="#[output application/json --- readUrl('classpath://SalesForceDatatest\set-event_variable_7.dwl')]" encoding="UTF-8" mediaType="application/json" />
+					<munit:variable key="copy" value="#[output application/java --- readUrl('classpath://SalesForceDatatest\set-event_variable_8.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variable key="dbData" value="#[output application/json --- readUrl('classpath://SalesForceDatatest\set-event_variable_9.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="b6cfeb61-f73f-496e-aed5-8c81d3d3edda" >
+				<flow-ref doc:name="SALESFORCE:INVALID_INPUT" doc:id="ec5afa26-1875-4eef-ab5e-c9c5b9548663" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="f69afdb9-c41f-4329-8563-9d413bb24666" >
+						<logger level="INFO" doc:name="Logger" doc:id="36faffbc-4182-4473-914a-abe4e55b122c" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="c5fecfc7-4628-45d7-b609-b93ab3b4f193" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SALESFORCE:RETRY_EXHAUSTED" doc:id="408a47d1-a6c2-4cd5-bdcf-083946ce735b" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Set Payload" doc:id="3ecaed3c-5ecd-4951-9687-6b6095d7f8af" processor="set-payload" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="dcad5275-c1a2-4fdb-9bab-140db968add1" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SALESFORCE:RETRY_EXHAUSTED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="d68b0336-460b-45df-b057-087e527c2623" >
+				<munit:payload value="#[readUrl('classpath://SalesForceDatatest\set-event_payload1.dwl')]" />
+				<munit:variables >
+					<munit:variable key="FileName" value="#[readUrl('classpath://SalesForceDatatest\set-event_variable_5.dwl')]" />
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForceDatatest\set-event_variable_6.dwl')]" encoding="UTF-8" />
+					<munit:variable key="sftpData" value="#[output application/json --- readUrl('classpath://SalesForceDatatest\set-event_variable_7.dwl')]" encoding="UTF-8" mediaType="application/json" />
+					<munit:variable key="copy" value="#[output application/java --- readUrl('classpath://SalesForceDatatest\set-event_variable_8.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variable key="dbData" value="#[output application/json --- readUrl('classpath://SalesForceDatatest\set-event_variable_9.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="1ba410bd-e743-4f89-bcba-f989cb514579" >
+				<flow-ref doc:name="SALESFORCE:RETRY_EXHAUSTED" doc:id="b6f9d8c2-235d-4937-afb0-3a6f7dd71de4" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="b119daed-bb49-4e01-9dc2-4fd48be3c462" >
+						<logger level="INFO" doc:name="Logger" doc:id="89a2fc5a-c234-44db-ac8e-fe3faeb4a692" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="41824dda-f661-41e1-b882-bc6e41130e87" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SALESFORCE:LIMIT_EXCEEDED" doc:id="36128af0-0e92-49cf-aaa8-c571c0fee4fa" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Set Payload" doc:id="004d90d1-db00-45da-8df0-6cea0656a684" processor="set-payload" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="dcad5275-c1a2-4fdb-9bab-140db968add1" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SALESFORCE:LIMIT_EXCEEDED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="e4cff702-f9dd-4cd6-83f0-4ec602152f36" >
+				<munit:payload value="#[readUrl('classpath://SalesForceDatatest\set-event_payload1.dwl')]" />
+				<munit:variables >
+					<munit:variable key="FileName" value="#[readUrl('classpath://SalesForceDatatest\set-event_variable_5.dwl')]" />
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForceDatatest\set-event_variable_6.dwl')]" encoding="UTF-8" />
+					<munit:variable key="sftpData" value="#[output application/json --- readUrl('classpath://SalesForceDatatest\set-event_variable_7.dwl')]" encoding="UTF-8" mediaType="application/json" />
+					<munit:variable key="copy" value="#[output application/java --- readUrl('classpath://SalesForceDatatest\set-event_variable_8.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variable key="dbData" value="#[output application/json --- readUrl('classpath://SalesForceDatatest\set-event_variable_9.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="97188e56-47a1-41b3-909c-af09eb9d3061" >
+				<flow-ref doc:name="FILE" doc:id="6d201e52-8db6-4657-91f1-1cf2389263ab" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="f987ee81-cb95-445e-a59d-1a58064a8519" >
+						<logger level="INFO" doc:name="Logger" doc:id="4bbd41a5-ff15-43eb-84f4-fe7805434881" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="3e8f3098-ecd0-47d2-927f-cc54517281bc" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SALESFORCE:NOT_FOUND" doc:id="e7da8e1d-dd69-43cc-8ad3-0302cb6c79e4" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Set Payload" doc:id="d5070d81-4986-497c-ba49-7a3bd23ebd70" processor="set-payload" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="dcad5275-c1a2-4fdb-9bab-140db968add1" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SALESFORCE:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="92136ad1-07c1-4b21-81e5-f1cd9e94c75b" >
+				<munit:payload value="#[readUrl('classpath://SalesForceDatatest\set-event_payload1.dwl')]" />
+				<munit:variables >
+					<munit:variable key="FileName" value="#[readUrl('classpath://SalesForceDatatest\set-event_variable_5.dwl')]" />
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForceDatatest\set-event_variable_6.dwl')]" encoding="UTF-8" />
+					<munit:variable key="sftpData" value="#[output application/json --- readUrl('classpath://SalesForceDatatest\set-event_variable_7.dwl')]" encoding="UTF-8" mediaType="application/json" />
+					<munit:variable key="copy" value="#[output application/java --- readUrl('classpath://SalesForceDatatest\set-event_variable_8.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variable key="dbData" value="#[output application/json --- readUrl('classpath://SalesForceDatatest\set-event_variable_9.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="e4c558b3-f108-4935-88e0-c0684d9b7301" >
+				<flow-ref doc:name="SALESFORCE:NOT_FOUND" doc:id="c82d7993-d2e1-4580-8566-e755f4df20f8" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="5d281a05-a980-48ed-84bb-69337b84a0cd" >
+						<logger level="INFO" doc:name="Logger" doc:id="60803a47-525c-44d0-828f-c7862c58db00" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="09293194-876c-4376-b02b-a38dbbaba3b5" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SALESFORCE:MUTUAL_AUTHENTICATION_FAILED" doc:id="e8ef2d4b-df99-4d2a-bbdc-257e07f68c71" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Set Payload" doc:id="91ccab2f-9715-4384-b507-0e1a875fc2d7" processor="set-payload" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="dcad5275-c1a2-4fdb-9bab-140db968add1" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SALESFORCE:MUTUAL_AUTHENTICATION_FAILED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="c4b895c1-ed2d-4f70-8849-8eeb2a222f53" >
+				<munit:payload value="#[readUrl('classpath://SalesForceDatatest\set-event_payload1.dwl')]" />
+				<munit:variables >
+					<munit:variable key="FileName" value="#[readUrl('classpath://SalesForceDatatest\set-event_variable_5.dwl')]" />
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForceDatatest\set-event_variable_6.dwl')]" encoding="UTF-8" />
+					<munit:variable key="sftpData" value="#[output application/json --- readUrl('classpath://SalesForceDatatest\set-event_variable_7.dwl')]" encoding="UTF-8" mediaType="application/json" />
+					<munit:variable key="copy" value="#[output application/java --- readUrl('classpath://SalesForceDatatest\set-event_variable_8.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variable key="dbData" value="#[output application/json --- readUrl('classpath://SalesForceDatatest\set-event_variable_9.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="127a7ef7-0088-43c0-adf7-5fb1126e867d" >
+				<flow-ref doc:name="SALESFORCE:MUTUAL_AUTHENTICATION_FAILED" doc:id="8f7c66cf-8187-48ae-9868-7ae24632caa5" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="8145cc13-b94f-4ffb-b414-b1299074f74f" >
+						<logger level="INFO" doc:name="Logger" doc:id="990f1fb3-5e99-490a-a223-8f8723459b82" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="8cf24fc7-658e-4de3-8612-62b451b67dc6" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	<munit:test name="SALESFORCE:INVALID_RESPONSE" doc:id="bac83e6a-8c69-442b-bef5-baca3e4f3b9a" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Set Payload" doc:id="98d68fdb-de61-45e7-b5ba-569b6746410a" processor="set-payload" >
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="dcad5275-c1a2-4fdb-9bab-140db968add1" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="SALESFORCE:INVALID_RESPONSE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="86d4fa25-224e-4dba-9343-51b448d981f4" >
+				<munit:payload value="#[readUrl('classpath://SalesForceDatatest\set-event_payload1.dwl')]" />
+				<munit:variables >
+					<munit:variable key="FileName" value="#[readUrl('classpath://SalesForceDatatest\set-event_variable_5.dwl')]" />
+					<munit:variable key="CorelationId" value="#[readUrl('classpath://SalesForceDatatest\set-event_variable_6.dwl')]" encoding="UTF-8" />
+					<munit:variable key="sftpData" value="#[output application/json --- readUrl('classpath://SalesForceDatatest\set-event_variable_7.dwl')]" encoding="UTF-8" mediaType="application/json" />
+					<munit:variable key="copy" value="#[output application/java --- readUrl('classpath://SalesForceDatatest\set-event_variable_8.dwl')]" encoding="UTF-8" mediaType="application/java" />
+					<munit:variable key="dbData" value="#[output application/json --- readUrl('classpath://SalesForceDatatest\set-event_variable_9.dwl')]" encoding="UTF-8" mediaType="application/json" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<try doc:name="Try" doc:id="373258bd-00c9-4bf9-8b9c-138500b22e16" >
+				<flow-ref doc:name="SALESFORCE:INVALID_RESPONSE" doc:id="3e8de151-a080-432d-9be4-a72df6386296" name="project3-papi-1Flow" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="1a60318f-6a2d-4cfa-9326-6ce3788c3de0" >
+						<logger level="INFO" doc:name="Logger" doc:id="45744a3b-a307-4fdd-ad46-bedfc012a7c4" message="#[payload]" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="6155c59a-6c2b-475d-a79b-0d829e80c147" actual="#[vars.error]" expected='#["SalesForceError"]' />
+		</munit:validation>
+	</munit:test>
+	
+
+
+</mule>

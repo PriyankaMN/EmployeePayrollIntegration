@@ -1,0 +1,14 @@
+%dw 2.0
+
+type auto_8dd6948c_2c81_41c4_aec4_a8b5ea05a9e7_Output_Variables_dbData = Array<{|  Emp_Id: String,   First_Name: String,   Last_Name: String,   Joining_Date: Date {"format": "yyyy-MM-dd"},   Address: String,   DateOfBirth: Date {"format": "yyyy-MM-dd"},   Phone_Number: Number | Null,   Employee_Status: java_lang_Object | String,   Payment_Status: java_lang_Object_13 | String|}>
+type java_lang_Object_13 = {|  |} {"typeAlias": "Object",
+"class": "java.lang.Object",
+"typeId": "java.lang.Object"}
+
+
+type java_lang_Object = {|  |} {"typeAlias": "Object",
+"class": "java.lang.Object",
+"typeId": "java.lang.Object"}
+
+
+
