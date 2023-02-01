@@ -1,10 +1,10 @@
 file:
-  ReadPath: C:\Users\primahar\OneDrive - Capgemini\Desktop\SFTP\Outbound\payment_Processing.csv
-  WritePath: C:\Users\primahar\OneDrive - Capgemini\Desktop\SFTP\Inbound\sftpData.csv
-  ArchivePath : C:\Users\primahar\OneDrive - Capgemini\Desktop\SFTP\Archive
-  Outbound : C:\Users\primahar\OneDrive - Capgemini\Desktop\SFTP\Outbound\Excluded\\
-  filePath : C:\Users\primahar\OneDrive - Capgemini\Desktop\SFTP
-  sftp: C:\Users\primahar\OneDrive - Capgemini\Desktop\SFTP\Inboundd\sftpData.csv
+  ReadPath: C:\Users\Desktop\SFTP\Outbound\payment_Processing.csv
+  WritePath: C:\Users\Desktop\SFTP\Inbound\sftpData.csv
+  ArchivePath : C:\Users\Desktop\SFTP\Archive
+  Outbound : C:\Users\Desktop\SFTP\Outbound\Excluded\
+  filePath : C:\Users\Desktop\SFTP
+  sftp: C:\Users\Desktop\SFTP\Inboundd\sftpData.csv
 
 db:
   host: localhost
