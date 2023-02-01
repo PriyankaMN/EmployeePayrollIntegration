@@ -20,6 +20,11 @@ Sequence Diagram:
 
 ![image](https://user-images.githubusercontent.com/66421109/216097860-dfb4d39b-7c14-4c89-ad30-b2caff878e44.png)
 
+Project Specification Document:
+
+[Specification Document.docx](https://github.com/PriyankaMN/EmployeePayrollIntegration/files/10559225/Specification.Document.docx)
+
+
 Project Document:
 
 [EmployeePayrollIntegration_ProjectDocument.pdf](https://github.com/PriyankaMN/EmployeePayrollIntegration/files/10559151/EmployeePayrollIntegration_ProjectDocument.pdf)
